@@ -35,22 +35,25 @@ LDFLAGS.debug	:= -g3 -fsanitize=address -fsanitize=undefined -fsanitize=leak
 LDFLAGS.release	:= 
 LDFLAGS	:= ${LDFLAGS.${BUILD}}
 
+COMPILE	= ${CC} -MD -MP ${CFLAGS} -c $< -o $@
+LINK	= ${CC} ${LDFLAGS} ${filter-out Makefile, $^} ${LDLIBS} -o $@
+
 all: ${exes:%=${build_dir}/%}
 
 ${build_dir}:
 	mkdir $@
 
-${build_dir}/%.o: %.c | ${build_dir}
-	${CC} -MD -MP ${CFLAGS} -c $< -o $@
+${build_dir}/%.o: %.c Makefile | ${build_dir}
+	${strip ${COMPILE}}
 
-${build_dir}/${BIN1}: ${addprefix ${build_dir}/, ${OBJS1}}
-	${CC} ${LDFLAGS} $< ${LDLIBS} -o $@
+${build_dir}/${BIN1}: ${addprefix ${build_dir}/, ${OBJS1}} Makefile | ${build_dir}
+	${strip ${LINK}}
 
-${build_dir}/${BIN2}: ${addprefix ${build_dir}/, ${OBJS2}}
-	${CC} ${LDFLAGS} $< ${LDLIBS} -o $@
+${build_dir}/${BIN2}: ${addprefix ${build_dir}/, ${OBJS2}} Makefile | ${build_dir}
+	${strip ${LINK}}
 
-${build_dir}/${BIN3}: ${addprefix ${build_dir}/, ${OBJS3}}
-	${CC} ${LDFLAGS} $< ${LDLIBS} -o $@
+${build_dir}/${BIN3}: ${addprefix ${build_dir}/, ${OBJS3}} Makefile | ${build_dir}
+	${strip ${LINK}}
 
 ${BIN1}: ${build_dir}/${BIN1}
 
