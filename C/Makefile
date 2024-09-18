@@ -23,7 +23,7 @@ DEPS3	:= ${OBJS3:.o=.d}
 
 -include ${addprefix ${build_dir}/, ${DEPS1} ${DEPS2} ${DEPS3}}
 
-CC	:=	clang
+CC	:= clang
 
 CFLAGS.debug	:= -O0 -g3 -fsanitize=address,undefined,leak
 CFLAGS.release	:=

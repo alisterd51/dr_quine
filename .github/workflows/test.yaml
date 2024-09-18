@@ -7,19 +7,17 @@ on:
     branches: [ "master" ]
 
 jobs:
-  test:
+  c:
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
       matrix:
+        lang:
+          - C
         program:
           - Colleen
           - Grace
           - Sully
-        lang:
-          - C
-          # - ASM
-          # - RUST
         cc:
           - clang
           - gcc
@@ -49,5 +47,92 @@ jobs:
         run: |
           cd ${{ matrix.lang }}
           make Sully CC=${{ matrix.cc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Sully
+  asm:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        lang:
+          - ASM
+        program:
+          - Colleen
+          # - Grace
+          # - Sully
+        as:
+          - nasm
+        build:
+          - debug
+          - release
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: install nasm
+        if: matrix.as == 'nasm'
+        run: |
+          sudo apt update && sudo apt install nasm
+      - name: Colleen
+        if: matrix.program == 'Colleen'
+        run: |
+          cd ${{ matrix.lang }}
+          make Colleen AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Colleen > Colleen_copy.s
+          diff Colleen_copy.s ../Colleen.s
+      - name: Grace
+        if: matrix.program == 'Grace'
+        run: |
+          cd ${{ matrix.lang }}
+          make Grace AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Grace
+          diff Grace_kid.s ../Grace.s
+      - name: Sully
+        if: matrix.program == 'Sully'
+        run: |
+          cd ${{ matrix.lang }}
+          make Sully AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Sully
+  rust:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        lang:
+          - RUST
+        program:
+          - None
+          # - Colleen
+          # - Grace
+          # - Sully
+        rustc:
+          - rustc
+        build:
+          - debug
+          - release
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: Colleen
+        if: matrix.program == 'Colleen'
+        run: |
+          cd ${{ matrix.lang }}
+          make Colleen RUSTC=${{ matrix.rustc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Colleen > Colleen_copy.rs
+          diff Colleen_copy.rs ../Colleen.rs
+      - name: Grace
+        if: matrix.program == 'Grace'
+        run: |
+          cd ${{ matrix.lang }}
+          make Grace RUSTC=${{ matrix.rustc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Grace
+          diff Grace_kid.rs ../Grace.rs
+      - name: Sully
+        if: matrix.program == 'Sully'
+        run: |
+          cd ${{ matrix.lang }}
+          make Sully RUSTC=${{ matrix.rustc }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Sully
