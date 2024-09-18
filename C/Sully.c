@@ -12,11 +12,11 @@ int main()
 
     if (i > 0)
     {
-        sprintf(name, "Sully_%d.c", i);
+        sprintf(name, "Sully_%d.c", i - 1);
         stream = fopen(name, "w+");
         fprintf(stream, SULLY, SULLY, '\n', '\"', '\\', '\'', i - 1);
         fflush(stream);
-        sprintf(str, "cc Sully_%1$d.c -o Sully_%1$d && ./Sully_%1$d", i);
+        sprintf(str, "cc Sully_%1$d.c -o Sully_%1$d && ./Sully_%1$d", i - 1);
         system(str);
     }
     return (0);

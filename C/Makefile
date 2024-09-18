@@ -25,13 +25,13 @@ DEPS3	:= ${OBJS3:.o=.d}
 
 CC	:=	clang
 
-CFLAGS.debug	:= -O0 -g3 -fsanitize=address -fsanitize=undefined -fsanitize=leak
+CFLAGS.debug	:= -O0 -g3 -fsanitize=address,undefined,leak
 CFLAGS.release	:=
 CFLAGS	:= -Wall -Wextra -Werror ${CFLAGS.${BUILD}}
 
 LDLIBS	:= -lc
 
-LDFLAGS.debug	:= -g3 -fsanitize=address -fsanitize=undefined -fsanitize=leak
+LDFLAGS.debug	:= -g3 -fsanitize=address,undefined,leak
 LDFLAGS.release	:= 
 LDFLAGS	:= ${LDFLAGS.${BUILD}}
 
