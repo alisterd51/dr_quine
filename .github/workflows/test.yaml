@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        program:
+          - Colleen
+          - Grace
+          - Sully
+        lang:
+          - C
+          # - ASM
+          # - RUST
+        cc:
+          - clang
+          - gcc
+        build:
+          - debug
+          - release
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - name: Colleen
+        if: matrix.program == 'Colleen'
+        run: |
+          cd ${{ matrix.lang }}
+          make Colleen CC=${{ matrix.cc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Colleen > Colleen_copy.c
+          diff Colleen_copy.c ../Colleen.c
+      - name: Grace
+        if: matrix.program == 'Grace'
+        run: |
+          cd ${{ matrix.lang }}
+          make Grace CC=${{ matrix.cc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Grace
+          diff Grace_kid.c ../Grace.c
+      - name: Sully
+        if: matrix.program == 'Sully'
+        run: |
+          cd ${{ matrix.lang }}
+          make Sully CC=${{ matrix.cc }} BUILD=${{ matrix.build }}
+          cd ${{ matrix.build }}
+          ./Sully
