@@ -58,7 +58,7 @@ jobs:
           - ASM
         program:
           - Colleen
-          # - Grace
+          - Grace
           # - Sully
         as:
           - nasm
