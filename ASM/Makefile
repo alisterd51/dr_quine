@@ -17,9 +17,11 @@ OBJS1	:= ${SRCS1:.s=.o}
 OBJS2	:= ${SRCS2:.s=.o}
 OBJS3	:= ${SRCS3:.s=.o}
 
-DEPS1	:= ${OBJS1:.o=.d}
-DEPS2	:= ${OBJS2:.o=.d}
-DEPS3	:= ${OBJS3:.o=.d}
+DEPS1	:= ${OBJS1:.o=.o.d}
+DEPS2	:= ${OBJS2:.o=.o.d}
+DEPS3	:= ${OBJS3:.o=.o.d}
+
+-include ${addprefix ${build_dir}/, ${DEPS1} ${DEPS2} ${DEPS3}}
 
 AS	:= nasm
 LD	:= clang
@@ -30,11 +32,11 @@ ASFLAGS	:= -f elf64 ${ASFLAGS.${BUILD}}
 
 LDLIBS	:=
 
-LDFLAGS.debug	:=
+LDFLAGS.debug	:= -g3 -fsanitize=address,undefined,leak
 LDFLAGS.release	:= 
 LDFLAGS	:= ${LDFLAGS.${BUILD}}
 
-COMPILE	= ${AS} ${ASFLAGS} $< -o $@
+COMPILE	= ${AS} -MD -MP ${ASFLAGS} $< -o $@
 LINK	= ${LD} ${LDFLAGS} ${filter-out Makefile, $^} ${LDLIBS} -o $@
 
 all: ${exes:%=${build_dir}/%}

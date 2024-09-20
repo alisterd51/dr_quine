@@ -49,6 +49,15 @@ jobs:
           make Sully CC=${{ matrix.cc }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Sully
+          ls -al | grep Sully | wc -l > wc.txt
+          echo 13 > number.txt
+          diff number.txt wc.txt
+          diff ../Sully.c ./Sully_0.c | grep '<\|>' > a
+          echo -e "<     int i = 5;\n>     int i = 0;" > b
+          diff a b
+          diff ./Sully_3.c ./Sully_2.c | grep '<\|>' > a
+          echo -e "<     int i = 3;\n>     int i = 2;" > b
+          diff a b
   asm:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -59,9 +68,12 @@ jobs:
         program:
           - Colleen
           - Grace
-          # - Sully
+          - Sully
         as:
           - nasm
+        linker:
+          - clang
+          - gcc
         build:
           - debug
           - release
@@ -75,7 +87,7 @@ jobs:
         if: matrix.program == 'Colleen'
         run: |
           cd ${{ matrix.lang }}
-          make Colleen AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          make Colleen AS=${{ matrix.as }} LD=${{ matrix.linker }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Colleen > Colleen_copy.s
           diff Colleen_copy.s ../Colleen.s
@@ -83,7 +95,7 @@ jobs:
         if: matrix.program == 'Grace'
         run: |
           cd ${{ matrix.lang }}
-          make Grace AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          make Grace AS=${{ matrix.as }} LD=${{ matrix.linker }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Grace
           diff Grace_kid.s ../Grace.s
@@ -91,9 +103,18 @@ jobs:
         if: matrix.program == 'Sully'
         run: |
           cd ${{ matrix.lang }}
-          make Sully AS=${{ matrix.as }} BUILD=${{ matrix.build }}
+          make Sully AS=${{ matrix.as }} LD=${{ matrix.linker }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Sully
+          ls -al | grep Sully | wc -l > wc.txt
+          echo 13 > number.txt
+          diff number.txt wc.txt
+          diff ../Sully.s ./Sully_0.s | grep '<\|>' > a
+          echo -e "< %define i 5\n> %define i 0" > b
+          diff a b
+          diff ./Sully_3.s ./Sully_2.s | grep '<\|>' > a
+          echo -e "< %define i 3\n> %define i 2" > b
+          diff a b
   rust:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -136,3 +157,12 @@ jobs:
           make Sully RUSTC=${{ matrix.rustc }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Sully
+          ls -al | grep Sully | wc -l > wc.txt
+          echo 13 > number.txt
+          diff number.txt wc.txt
+          diff ../Sully.rs ./Sully_0.rs | grep '<\|>' > a
+          echo -e "<     int i = 5;\n>     int i = 0;" > b
+          diff a b
+          diff ./Sully_3.rs ./Sully_2.rs | grep '<\|>' > a
+          echo -e "<     int i = 3;\n>     int i = 2;" > b
+          diff a b
