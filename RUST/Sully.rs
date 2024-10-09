@@ -8,7 +8,7 @@ const SULLY_2: &str = r#"
     if i > 0 {
         let kid_name = format!("Sully_{}", i - 1);
         let kid_source = format!("{}.rs", kid_name);
-        let kid_path = format!("./{}", kid_name);
+        let command = format!("rustc {}.rs -o {} && ./{}", kid_name, kid_name, kid_name);
         let data = format!(
             "use std::fs;\nuse std::process::Command;\n\nconst SULLY_1: &str = r$\"{}\"$;\nconst SULLY_2: &str = r$\"{}\"$;\n{}    let i = {};{}",
             SULLY_1,
@@ -19,15 +19,7 @@ const SULLY_2: &str = r#"
         );
 
         fs::write(kid_source.clone(), data).expect("Unable to write file");
-        let command_status = Command::new("rustc")
-            .arg(kid_source.clone())
-            .arg("-o")
-            .arg(kid_name.clone())
-            .status()
-            .expect("");
-        if command_status.success() {
-            Command::new(kid_path.clone()).spawn().expect("");
-        }
+        Command::new("sh").arg("-c").arg(command).spawn().expect("");
     }
 }
 "#;
@@ -37,7 +29,7 @@ fn main() {
     if i > 0 {
         let kid_name = format!("Sully_{}", i - 1);
         let kid_source = format!("{}.rs", kid_name);
-        let kid_path = format!("./{}", kid_name);
+        let command = format!("rustc {}.rs -o {} && ./{}", kid_name, kid_name, kid_name);
         let data = format!(
             "use std::fs;\nuse std::process::Command;\n\nconst SULLY_1: &str = r#\"{}\"#;\nconst SULLY_2: &str = r#\"{}\"#;\n{}    let i = {};{}",
             SULLY_1,
@@ -48,14 +40,6 @@ fn main() {
         );
 
         fs::write(kid_source.clone(), data).expect("Unable to write file");
-        let command_status = Command::new("rustc")
-            .arg(kid_source.clone())
-            .arg("-o")
-            .arg(kid_name.clone())
-            .status()
-            .expect("");
-        if command_status.success() {
-            Command::new(kid_path.clone()).spawn().expect("");
-        }
+        Command::new("sh").arg("-c").arg(command).spawn().expect("");
     }
 }

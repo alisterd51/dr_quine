@@ -125,7 +125,7 @@ jobs:
         program:
           - Colleen
           - Grace
-          # - Sully
+          - Sully
         rustc:
           - rustc
         build:
@@ -156,6 +156,7 @@ jobs:
           make Sully RUSTC=${{ matrix.rustc }} BUILD=${{ matrix.build }}
           cd ${{ matrix.build }}
           ./Sully
+          sleep 1
           ls -al | grep Sully | wc -l > wc.txt
           echo 11 > number.txt
           diff number.txt wc.txt
