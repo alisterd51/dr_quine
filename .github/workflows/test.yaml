@@ -123,8 +123,7 @@ jobs:
         lang:
           - RUST
         program:
-          - None
-          # - Colleen
+          - Colleen
           # - Grace
           # - Sully
         rustc:
