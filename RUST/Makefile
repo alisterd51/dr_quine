@@ -21,6 +21,8 @@ RUSTFLAGS	:= ${RUSTFLAGS.${BUILD}}
 
 COMPILE	= ${RUSTC} ${RUSTFLAGS} $< -o $@
 
+all: ${exes:%=${build_dir}/%}
+
 ${build_dir}:
 	mkdir $@
 

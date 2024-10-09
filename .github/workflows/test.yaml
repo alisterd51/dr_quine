@@ -124,7 +124,7 @@ jobs:
           - RUST
         program:
           - Colleen
-          # - Grace
+          - Grace
           # - Sully
         rustc:
           - rustc
