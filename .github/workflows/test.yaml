@@ -157,11 +157,11 @@ jobs:
           cd ${{ matrix.build }}
           ./Sully
           ls -al | grep Sully | wc -l > wc.txt
-          echo 13 > number.txt
+          echo 11 > number.txt
           diff number.txt wc.txt
           diff ../Sully.rs ./Sully_0.rs | grep '<\|>' > a
-          echo -e "<     int i = 5;\n>     int i = 0;" > b
+          echo -e "<     let i = 5;\n>     let i = 0;" > b
           diff a b
           diff ./Sully_3.rs ./Sully_2.rs | grep '<\|>' > a
-          echo -e "<     int i = 3;\n>     int i = 2;" > b
+          echo -e "<     let i = 3;\n>     let i = 2;" > b
           diff a b
